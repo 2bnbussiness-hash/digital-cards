@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import React from 'react'
 import ModernTemplate from '@/components/templates/ModernTemplate'
 import ClassicTemplate from '@/components/templates/ClassicTemplate'
 import MinimalTemplate from '@/components/templates/MinimalTemplate'
 import BoldTemplate from '@/components/templates/BoldTemplate'
 import { CardData } from '@/lib/supabase'
 
-const templates: { id: string; name: string; Component: (props: { card: CardData }) => JSX.Element }[] = [
+const templates: { id: string; name: string; Component: (props: { card: CardData }) => React.ReactElement }[] = [
   { id: 'modern', name: 'מודרני', Component: ModernTemplate },
   { id: 'classic', name: 'קלאסי', Component: ClassicTemplate },
   { id: 'minimal', name: 'מינימליסטי', Component: MinimalTemplate },
