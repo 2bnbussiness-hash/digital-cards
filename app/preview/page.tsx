@@ -6,8 +6,9 @@ import ModernTemplate from '@/components/templates/ModernTemplate'
 import ClassicTemplate from '@/components/templates/ClassicTemplate'
 import MinimalTemplate from '@/components/templates/MinimalTemplate'
 import BoldTemplate from '@/components/templates/BoldTemplate'
+import { CardData } from '@/lib/supabase'
 
-const templates = [
+const templates: { id: string; name: string; Component: (props: { card: CardData }) => JSX.Element }[] = [
   { id: 'modern', name: 'מודרני', Component: ModernTemplate },
   { id: 'classic', name: 'קלאסי', Component: ClassicTemplate },
   { id: 'minimal', name: 'מינימליסטי', Component: MinimalTemplate },
@@ -16,7 +17,7 @@ const templates = [
 
 export default function PreviewPage() {
   const router = useRouter()
-  const [form, setForm] = useState<any>(null)
+  const [form, setForm] = useState<CardData | null>(null)
   const [selected, setSelected] = useState('modern')
   const [loading, setLoading] = useState(false)
 
