@@ -46,6 +46,29 @@ function validateStep2(form: typeof defaultForm): FormErrors {
     errors.linkedin = 'שם משתמש LinkedIn לא תקין'
   return errors
 }
+function Field({ label, placeholder, type = 'text', hint, value, error, onChange, onBlur }: {
+  label: string; field?: string; placeholder: string; type?: string; hint?: string
+  value: string; error?: string; onChange: (v: string) => void; onBlur: () => void
+}) {
+  return (
+    <div className="text-right">
+      <label className="text-sm font-medium text-white/80 block mb-1">{label}</label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onBlur={onBlur}
+        className={`w-full border rounded-xl px-4 py-3 text-right text-white placeholder-white/50 focus:outline-none focus:ring-2 bg-white/10 transition-colors ${
+          error ? 'border-red-400 focus:ring-red-200' : 'border-white/20 focus:ring-indigo-300'
+        }`}
+      />
+      {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
+      {hint && !error && <p className="text-white/40 text-xs mt-1">{hint}</p>}
+    </div>
+  )
+}
+
 export default function Home() {
   const router = useRouter()
   const [step, setStep] = useState(1)
@@ -87,25 +110,6 @@ export default function Home() {
       router.push('/preview')
     }
   }
-  const Field = ({ label, field, placeholder, type = 'text', hint }: {
-    label: string; field: keyof typeof defaultForm; placeholder: string; type?: string; hint?: string
-  }) => (
-    <div className="text-right">
-      <label className="text-sm font-medium text-white/80 block mb-1">{label}</label>
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={form[field]}
-        onChange={e => update(field, e.target.value)}
-        onBlur={() => handleBlur(field)}
-        className={`w-full border rounded-xl px-4 py-3 text-right text-white placeholder-white/50 focus:outline-none focus:ring-2 bg-white/10 transition-colors ${
-          errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-white/20 focus:ring-indigo-300'
-        }`}
-      />
-      {errors[field] && <p className="text-red-400 text-xs mt-1">{errors[field]}</p>}
-      {hint && !errors[field] && <p className="text-white/40 text-xs mt-1">{hint}</p>}
-    </div>
-  )
   const bgStyle = form.background_type === 'image' && form.background_image
     ? { backgroundImage: `url(${form.background_image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
     : { background: form.primary_color }
@@ -143,22 +147,22 @@ export default function Home() {
           {step === 1 && (
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-white text-right mb-4">פרטי העסק</h2>
-              <Field label="שם העסק *" field="business_name" placeholder="למשל: סלון יופי שרה" />
-              <Field label="שם הבעלים *" field="owner_name" placeholder="שם מלא" />
-              <Field label="מקצוע / תפקיד *" field="profession" placeholder="למשל: מעצבת שיער" />
-              <Field label="טלפון *" field="phone" placeholder="050-0000000" type="tel" hint="ספרות, מקפים וסוגריים בלבד" />
-              <Field label="אימייל *" field="email" placeholder="you@example.com" type="email" />
-              <Field label="אתר אינטרנט" field="website" placeholder="https://example.com" hint="חייב להתחיל ב-https://" />
-              <Field label="כתובת" field="address" placeholder="רחוב, עיר" />
+              <Field label="שם העסק *" placeholder="למשל: סלון יופי שרה" value={form.business_name} error={errors.business_name} onChange={v => update('business_name', v)} onBlur={() => handleBlur('business_name')} />
+              <Field label="שם הבעלים *" placeholder="שם מלא" value={form.owner_name} error={errors.owner_name} onChange={v => update('owner_name', v)} onBlur={() => handleBlur('owner_name')} />
+              <Field label="מקצוע / תפקיד *" placeholder="למשל: מעצבת שיער" value={form.profession} error={errors.profession} onChange={v => update('profession', v)} onBlur={() => handleBlur('profession')} />
+              <Field label="טלפון *" placeholder="050-0000000" type="tel" hint="ספרות, מקפים וסוגריים בלבד" value={form.phone} error={errors.phone} onChange={v => update('phone', v)} onBlur={() => handleBlur('phone')} />
+              <Field label="אימייל *" placeholder="you@example.com" type="email" value={form.email} error={errors.email} onChange={v => update('email', v)} onBlur={() => handleBlur('email')} />
+              <Field label="אתר אינטרנט" placeholder="https://example.com" hint="חייב להתחיל ב-https://" value={form.website} error={errors.website} onChange={v => update('website', v)} onBlur={() => handleBlur('website')} />
+              <Field label="כתובת" placeholder="רחוב, עיר" value={form.address} error={errors.address} onChange={v => update('address', v)} onBlur={() => handleBlur('address')} />
             </div>
           )}
           {step === 2 && (
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-white text-right mb-4">רשתות חברתיות</h2>
-              <Field label="WhatsApp" field="whatsapp" placeholder="972501234567" type="tel" hint="קוד מדינה + מספר, ספרות בלבד" />
-              <Field label="Instagram" field="instagram" placeholder="username" hint="אותיות, מספרים, נקודה וקו תחתון בלבד" />
-              <Field label="Facebook" field="facebook" placeholder="username או page name" />
-              <Field label="LinkedIn" field="linkedin" placeholder="username" hint="אותיות, מספרים ומקף בלבד" />
+              <Field label="WhatsApp" placeholder="972501234567" type="tel" hint="קוד מדינה + מספר, ספרות בלבד" value={form.whatsapp} error={errors.whatsapp} onChange={v => update('whatsapp', v)} onBlur={() => handleBlur('whatsapp')} />
+              <Field label="Instagram" placeholder="username" hint="אותיות, מספרים, נקודה וקו תחתון בלבד" value={form.instagram} error={errors.instagram} onChange={v => update('instagram', v)} onBlur={() => handleBlur('instagram')} />
+              <Field label="Facebook" placeholder="username או page name" value={form.facebook} error={errors.facebook} onChange={v => update('facebook', v)} onBlur={() => handleBlur('facebook')} />
+              <Field label="LinkedIn" placeholder="username" hint="אותיות, מספרים ומקף בלבד" value={form.linkedin} error={errors.linkedin} onChange={v => update('linkedin', v)} onBlur={() => handleBlur('linkedin')} />
             </div>
           )}
           {step === 3 && (
