@@ -97,7 +97,7 @@ export default function Home() {
         placeholder={placeholder} dir="rtl"
         value={form[field]}
         onChange={e => update(field, e.target.value)}
-        onBlur={() => handleBlur(field)}
+        onBlur={() => handleBlur(field)} autoComplete="off" dir="rtl"
         className={`w-full border rounded-xl px-4 py-3 text-right text-white placeholder-white/50 focus:outline-none focus:ring-2 bg-white/10 transition-colors ${
           errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-white/20 focus:ring-indigo-300'
         }`}
