@@ -1,8 +1,6 @@
 'use client'
-
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-
 const defaultForm = {
   business_name: '',
   owner_name: '',
@@ -20,9 +18,7 @@ const defaultForm = {
   background_type: 'color' as 'color' | 'image',
   background_image: '',
 }
-
 type FormErrors = Partial<Record<keyof typeof defaultForm, string>>
-
 function validateStep1(form: typeof defaultForm): FormErrors {
   const errors: FormErrors = {}
   if (!form.business_name.trim()) errors.business_name = 'שדה חובה'
@@ -38,7 +34,6 @@ function validateStep1(form: typeof defaultForm): FormErrors {
     errors.website = 'כתובת אתר לא תקינה (חייבת להתחיל ב-https://)'
   return errors
 }
-
 function validateStep2(form: typeof defaultForm): FormErrors {
   const errors: FormErrors = {}
   if (form.whatsapp.trim() && !/^\d{7,15}$/.test(form.whatsapp.trim()))
@@ -51,7 +46,6 @@ function validateStep2(form: typeof defaultForm): FormErrors {
     errors.linkedin = 'שם משתמש LinkedIn לא תקין'
   return errors
 }
-
 export default function Home() {
   const router = useRouter()
   const [step, setStep] = useState(1)
@@ -59,7 +53,6 @@ export default function Home() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Partial<Record<keyof typeof defaultForm, boolean>>>({})
   const bgImageRef = useRef<HTMLInputElement>(null)
-
   const update = (field: keyof typeof defaultForm, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }))
     if (touched[field]) {
@@ -67,13 +60,11 @@ export default function Home() {
       setErrors(prev => ({ ...prev, [field]: newErrors[field] }))
     }
   }
-
   const handleBlur = (field: keyof typeof defaultForm) => {
     setTouched(prev => ({ ...prev, [field]: true }))
     const newErrors = step === 1 ? validateStep1(form) : validateStep2(form)
     setErrors(prev => ({ ...prev, [field]: newErrors[field] }))
   }
-
   const handleBgImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -82,7 +73,6 @@ export default function Home() {
     reader.onload = () => setForm(prev => ({ ...prev, background_image: reader.result as string }))
     reader.readAsDataURL(file)
   }
-
   const handleNext = () => {
     const newErrors = step === 1 ? validateStep1(form) : step === 2 ? validateStep2(form) : {}
     if (Object.keys(newErrors).length > 0) {
@@ -97,31 +87,28 @@ export default function Home() {
       router.push('/preview')
     }
   }
-
   const Field = ({ label, field, placeholder, type = 'text', hint }: {
     label: string; field: keyof typeof defaultForm; placeholder: string; type?: string; hint?: string
   }) => (
     <div className="text-right">
-      <label className="text-sm font-medium text-gray-700 block mb-1">{label}</label>
+      <label className="text-sm font-medium text-white/80 block mb-1">{label}</label>
       <input
         type={type}
         placeholder={placeholder}
         value={form[field]}
         onChange={e => update(field, e.target.value)}
         onBlur={() => handleBlur(field)}
-        className={`w-full border rounded-xl px-4 py-3 text-right text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 bg-white transition-colors ${
-          errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-gray-300 focus:ring-indigo-300'
+        className={`w-full border rounded-xl px-4 py-3 text-right text-white placeholder-white/50 focus:outline-none focus:ring-2 bg-white/10 transition-colors ${
+          errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-white/20 focus:ring-indigo-300'
         }`}
       />
-      {errors[field] && <p className="text-red-500 text-xs mt-1">{errors[field]}</p>}
-      {hint && !errors[field] && <p className="text-gray-400 text-xs mt-1">{hint}</p>}
+      {errors[field] && <p className="text-red-400 text-xs mt-1">{errors[field]}</p>}
+      {hint && !errors[field] && <p className="text-white/40 text-xs mt-1">{hint}</p>}
     </div>
   )
-
   const bgStyle = form.background_type === 'image' && form.background_image
     ? { backgroundImage: `url(${form.background_image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
     : { background: form.primary_color }
-
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -130,11 +117,10 @@ export default function Home() {
           <h1 className="text-3xl font-black text-white tracking-tight">✦ CardPro</h1>
           <p className="text-indigo-300 text-sm mt-1">צור כרטיס ביקור דיגיטלי תוך דקות</p>
         </div>
-
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl p-8">
-          {/* Progress */}
+          {/* Progress - RTL: step 1 on right, step 3 on left */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-row-reverse items-center justify-between mb-3">
               {[
                 { n: 1, label: 'פרטים' },
                 { n: 2, label: 'רשתות' },
@@ -154,7 +140,6 @@ export default function Home() {
               <div className="absolute left-1/2 -translate-x-1/2 w-48 h-0.5 bg-white/10 -z-10" />
             </div>
           </div>
-
           {step === 1 && (
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-white text-right mb-4">פרטי העסק</h2>
@@ -167,7 +152,6 @@ export default function Home() {
               <Field label="כתובת" field="address" placeholder="רחוב, עיר" />
             </div>
           )}
-
           {step === 2 && (
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-white text-right mb-4">רשתות חברתיות</h2>
@@ -177,11 +161,9 @@ export default function Home() {
               <Field label="LinkedIn" field="linkedin" placeholder="username" hint="אותיות, מספרים ומקף בלבד" />
             </div>
           )}
-
           {step === 3 && (
             <div className="space-y-6">
               <h2 className="text-xl font-bold text-white text-right mb-4">עיצוב הרקע</h2>
-
               {/* Toggle */}
               <div className="flex rounded-2xl overflow-hidden border border-white/20">
                 <button
@@ -199,7 +181,6 @@ export default function Home() {
                   🖼️ תמונת רקע
                 </button>
               </div>
-
               {form.background_type === 'color' && (
                 <div className="text-right">
                   <label className="text-sm font-medium text-white/80 block mb-3">בחר צבע רקע</label>
@@ -212,7 +193,6 @@ export default function Home() {
                     />
                     <span className="text-white/70 font-mono">{form.primary_color}</span>
                   </div>
-                  {/* צבעים מוכנים */}
                   <div className="mt-4">
                     <p className="text-white/50 text-xs mb-2 text-right">צבעים מוכנים</p>
                     <div className="flex gap-2 justify-end flex-wrap">
@@ -225,7 +205,6 @@ export default function Home() {
                   </div>
                 </div>
               )}
-
               {form.background_type === 'image' && (
                 <div>
                   <input ref={bgImageRef} type="file" accept="image/*" onChange={handleBgImage} className="hidden" />
@@ -248,7 +227,6 @@ export default function Home() {
                   </button>
                 </div>
               )}
-
               {/* Preview */}
               <div className="rounded-2xl overflow-hidden shadow-xl h-24 flex items-center justify-center" style={bgStyle}>
                 <div className="text-center">
@@ -258,17 +236,16 @@ export default function Home() {
               </div>
             </div>
           )}
-
           <div className="flex gap-3 mt-8">
             {step > 1 && (
               <button onClick={() => { setStep(step - 1); setErrors({}) }}
                 className="flex-1 py-3 rounded-xl border border-white/30 text-white font-medium hover:bg-white/10 transition-colors">
-                ← חזור
+                → חזור
               </button>
             )}
             <button onClick={handleNext}
               className="flex-1 py-3 rounded-xl bg-white text-indigo-700 font-bold text-lg transition-all hover:bg-indigo-50 active:scale-95 shadow-lg">
-              {step === 3 ? 'לבחירת עיצוב ✦' : 'הבא →'}
+              {step === 3 ? 'לבחירת עיצוב ✦' : 'הבא ←'}
             </button>
           </div>
         </div>
