@@ -94,7 +94,7 @@ export default function Home() {
       <label className="text-sm font-medium text-white/80 block mb-1">{label}</label>
       <input
         type={type}
-        placeholder={placeholder} dir="rtl"
+        placeholder={placeholder}
         value={form[field]}
         onChange={e => update(field, e.target.value)}
         onBlur={() => handleBlur(field)}
@@ -245,7 +245,7 @@ export default function Home() {
             )}
             <button onClick={handleNext}
               className="flex-1 py-3 rounded-xl bg-white text-indigo-700 font-bold text-lg transition-all hover:bg-indigo-50 active:scale-95 shadow-lg">
-              {step === 3 ? 'לבחירת עיצוב ✦' : '← הבא'}
+              {step === 3 ? 'לבחירת עיצוב ✦' : 'הבא ←'}
             </button>
           </div>
         </div>
