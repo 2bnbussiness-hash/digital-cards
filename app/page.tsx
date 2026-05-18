@@ -94,7 +94,7 @@ export default function Home() {
       <label className="text-sm font-medium text-white/80 block mb-1">{label}</label>
       <input
         type={type}
-        placeholder={placeholder}
+        placeholder={placeholder} dir="rtl"
         value={form[field]}
         onChange={e => update(field, e.target.value)}
         onBlur={() => handleBlur(field)}
